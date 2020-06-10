@@ -35,7 +35,10 @@ class MFCC:
         """For data to have the same length. Later it's decorelated, so it's not a problem"""
         signal_target_length = int(self.file_length * fs)
         signal_actual_length = len(signal)
-        return np.pad(signal, int((signal_target_length-signal_actual_length)/2), 'constant', constant_values=(0))
+        try:
+            return np.pad(signal, int((signal_target_length-signal_actual_length)/2), 'constant', constant_values=(0))
+        except ValueError:
+            raise Exception('You have to change file_length, because it is too small.')
 
 
     def __pre_emphasise(self, signal):

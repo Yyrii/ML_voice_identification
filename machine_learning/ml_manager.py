@@ -17,7 +17,7 @@ class Manager:
         self.tt_distribution = [scalar * 2 * self.numbers_to_train for scalar in tt_distribution]  # train / test
 
 
-    def calculate_efficiency(self, dataset):
+    def calculate_efficiency(self, dataset, input_nodes_num):
         acc = 0
         for _ in range(self.rep_num):
             train_set, test_set = torch.utils.data.random_split(dataset, self.tt_distribution)
@@ -25,7 +25,7 @@ class Manager:
             train_batch = DataLoader(train_set, batch_size=self.batch_size, shuffle=True)
             test_batch = DataLoader(test_set, batch_size=self.batch_size, shuffle=True)
 
-            net = Net()
+            net = Net(input_nodes_num)
             loss_function = nn.CrossEntropyLoss()
             optimizer = optim.Adam(net.parameters(), lr=self.learning_rate)
 

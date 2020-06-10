@@ -3,9 +3,9 @@ import torch.nn.functional as F
 
 
 class Net(nn.Module):
-    def __init__(self):
+    def __init__(self, num_of_input_nodes):
         super().__init__()
-        self.fc1 = nn.Linear(59*12, 64)
+        self.fc1 = nn.Linear(num_of_input_nodes, 64)
         self.fc2 = nn.Linear(64, 64)
         self.fc3 = nn.Linear(64, 64)
         self.fc4 = nn.Linear(64, 4)
