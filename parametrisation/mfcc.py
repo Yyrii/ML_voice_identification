@@ -4,7 +4,6 @@ using https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning
 
 import numpy
 from scipy.fftpack import dct
-import numpy as np
 
 import matplotlib.pyplot as plt
 
@@ -16,6 +15,7 @@ class MFCC:
     __NFFT = 512  # fast fourier transform's length
     __num_of_filters = 40  # number of mel filters
     __cep_lifter = 22
+    __target_energy = 10000  # signal is adjusted to have this max peak
 
     def __init__(self, num_mfcc, file_length):
         self.num_mfcc = num_mfcc
@@ -24,6 +24,7 @@ class MFCC:
 
     def calculate_mfcc(self, fs, signal):
         signal = self.__zero_padding(signal, fs)
+        signal = self.__adjust_energy(signal)
         emphasized_signal = self.__pre_emphasise(signal)
         frames = self.__framing(emphasized_signal, fs)
         frame_spectrum = self.__fourier_transform(frames)
@@ -31,12 +32,18 @@ class MFCC:
         return self.__mfcc(filter_banks)
 
 
+    def __adjust_energy(self, signal):
+        max_ = numpy.max(signal)
+        scalar = self.__target_energy / max_
+        return signal * scalar
+
+
     def __zero_padding(self, signal, fs):
         """For data to have the same length. Later it's decorelated, so it's not a problem"""
         signal_target_length = int(self.file_length * fs)
         signal_actual_length = len(signal)
         try:
-            return np.pad(signal, int((signal_target_length-signal_actual_length)/2), 'constant', constant_values=(0))
+            return numpy.pad(signal, int((signal_target_length-signal_actual_length)/2), 'constant', constant_values=(0))
         except ValueError:
             raise Exception('You have to change file_length, because it is too small.')
 
