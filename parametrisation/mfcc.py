@@ -66,7 +66,6 @@ class MFCC:
         indices = numpy.tile(numpy.arange(0, frame_length), (num_frames, 1)) + numpy.tile(
             numpy.arange(0, num_frames * frame_step, frame_step), (frame_length, 1)).T
         frames = pad_signal[indices.astype(numpy.int32, copy=False)]
-        frames *= numpy.hamming(frame_length)
 
         frames *= numpy.hamming(frame_length)  # hamming window
 
