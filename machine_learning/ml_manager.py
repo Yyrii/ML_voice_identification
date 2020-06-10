@@ -8,12 +8,13 @@ from torch.utils.data import DataLoader
 
 class Manager:
 
-    def __init__(self, rep_num=10, tt_distribution=[180, 20], batch_size=5, epochs=3, lr=0.001):
+    def __init__(self, rep_num=10, tt_distribution=[90, 10], batch_size=5, epochs=3, lr=0.001, num_to_train=1):
         self.rep_num = rep_num  # as data size is too little, for one test
-        self.tt_distribution = tt_distribution  # train / test dataset distribution
         self.batch_size = batch_size
         self.epochs = epochs  # full passes over data, for loss minimalisation
         self.learning_rate = lr
+        self.numbers_to_train = num_to_train
+        self.tt_distribution = [scalar * 2 * self.numbers_to_train for scalar in tt_distribution]  # train / test
 
 
     def calculate_efficiency(self, dataset):

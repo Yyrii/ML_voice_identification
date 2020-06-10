@@ -15,9 +15,11 @@ class MFCC:
     __frame_stride = 0.015  # [ms] in other words it is frame length
     __NFFT = 512  # fast fourier transform's length
     __num_of_filters = 40  # number of mel filters
-    __num_mfcc = 12  # number of mfcc parameters per frame
     __cep_lifter = 22
-    __file_length = 0.9  # [s] (depending on training number value - 0.75 to 2.4)
+
+    def __init__(self, num_mfcc, file_length):
+        self.num_mfcc = num_mfcc
+        self.file_length = file_length  # [s] (depending on training number value - 0.75 to 2.4)
 
 
     def calculate_mfcc(self, fs, signal):
@@ -31,7 +33,7 @@ class MFCC:
 
     def __zero_padding(self, signal, fs):
         """For data to have the same length. Later it's decorelated, so it's not a problem"""
-        signal_target_length = self.__file_length * fs
+        signal_target_length = int(self.file_length * fs)
         signal_actual_length = len(signal)
         return np.pad(signal, int((signal_target_length-signal_actual_length)/2), 'constant', constant_values=(0))
 
@@ -91,7 +93,7 @@ class MFCC:
 
 
     def __mfcc(self, filter_banks):
-        mfcc = dct(filter_banks, type=2, axis=1, norm='ortho')[:, 1: (self.__num_mfcc + 1)]
+        mfcc = dct(filter_banks, type=2, axis=1, norm='ortho')[:, 1: (self.num_mfcc + 1)]
         (n_frames, n_coeff) = mfcc.shape
         n = numpy.arange(n_coeff)
         lift = 1 + (self.__cep_lifter / 2) * numpy.sin(numpy.pi * n / self.__cep_lifter)

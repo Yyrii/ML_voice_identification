@@ -1,0 +1,5 @@
+ECHO OFF
+ECHO "INSTALLING REQUIREMENTS..."
+pip install --user -r requirements.txt
+ECHO "REQUIREMENTS INSTALLED. STARTING APPLICATION."
+python main.py
