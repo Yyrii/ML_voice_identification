@@ -1,6 +1,7 @@
 from machine_learning.data_preparation import PrepareData
 from machine_learning.creating_dataset import MaskedVoicesDataset
 from machine_learning.ml_manager import Manager
+import time
 
 
 def main(numbers_to_train, filter_kind, cutoffs, w_noise_amp, file_length, rep_num, tt_distribution, batch_size,
@@ -15,21 +16,22 @@ def main(numbers_to_train, filter_kind, cutoffs, w_noise_amp, file_length, rep_n
 
 if __name__ == '__main__':
 
-    numbers_to_train = ['6', '3', '1']          # 0 - 9, as many as you want. Be aware of 'file_length' argument.
+    numbers_to_train = ['0','1','2','3',]       # 0 - 9, as many as you want. Be aware of 'file_length' argument.
     filter_kind = 'none'                        # either 'none', 'low' or 'band
     cutoffs = None                              # ex 'low': 500, 'band: [100, 1000]
-    white_noise_amp = 0.0                       # % of signal's max peak
-    file_length = 0.9                           # [s] zero padding to this file length
+    white_noise_amp = 0.1                       # part of signal's max peak ( 0.1 equals 10% max amplitude)
+    file_length = 2.3                           # [s] zero padding to this file length
     repetitions = 10                            # number determine how much training / tests will be performed
-    tt_distribution = [90, 10]                  # [%] train test batch size distribution
+    tt_distribution = [70, 30]                  # [%] train test batch size distribution
     batch_size = 5                              # how many samples are provided for ml per tick
     learning_rate = 0.001                       # pytorch's learning rate
     epochs = 3                                  # how many times, pytorch will pass through whole data for loss min.
     num_mfcc = 12
 
-
+    start_time = time.time()
     acc = main(numbers_to_train=numbers_to_train, filter_kind=filter_kind, cutoffs=cutoffs, w_noise_amp=white_noise_amp,
                file_length=file_length, rep_num=repetitions, tt_distribution=tt_distribution, batch_size=batch_size,
                learning_rate=learning_rate, epochs=epochs, num_mfcc=num_mfcc)
-
+    elapsed_time = time.time() - start_time
     print('Accuracy acquired: {} %'.format(round(acc, 3)))
+    print('elapsed time: ', elapsed_time)
